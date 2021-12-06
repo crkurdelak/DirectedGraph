@@ -3,7 +3,7 @@
  *
  * @author ckurdelak20@gorgefox.edu
  */
-public class MatrixGraph<V, E> {
+public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     private Vertex<V>[] _vertices;
     private Edge<V, E>[][] _edges; // 2D array
 
