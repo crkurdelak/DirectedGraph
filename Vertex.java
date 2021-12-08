@@ -9,29 +9,34 @@ public class Vertex<V> {
     private V _label;
 
     /**
+     * Creates a new vertex with the given label.
      *
-     * @param label
+     * @param label the label for this vertex
      */
     public Vertex(V label) {
-        // TODO implement ctor
+        _label = label;
     }
 
 
     /**
+     * Returns the label of this vertex.
      *
-     * @return
+     * @return the label of this vertex
      */
     public V getLabel() {
-        // TODO implement getLabel
+        return _label;
     }
 
 
     /**
+     * Returns true if this vertex is equal to the given vertex.
      *
-     * @param o
-     * @return
+     * Vertices are considered equal if and only if their labels are equal.
+     *
+     * @param o the vertex to compare to this vertex
+     * @return true if this vertex is equal to the given vertex
      */
     public boolean equals(Vertex<V> o) {
-        // TODO implement equals
+        return this.getLabel().equals(o.getLabel());
     }
 }
