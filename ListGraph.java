@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * TODO write description
@@ -10,6 +11,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
     // vertex label -> Vertex object
 
     private HashMap<V, HashMap<V, Edge<V, E>>> _edges;
+
     // outer HashMap: source vertex label -> inner map
     //      inner HashMap: destination vertex label -> Edge from source to destination
 
@@ -39,4 +41,149 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
     create vertex
     maybe add entry of outer map, but NOT of inner maps
      */
+
+    /**
+     * Adds a new vertex to this graph.
+     *
+     * @param v the label of the new vertex
+     */
+    @Override
+    public void add(V v) {
+
+    }
+
+    /**
+     * Returns true if this graph contains the given vertex label.
+     *
+     * @param v the vertex label
+     * @return true if this graph contains the given vertex label
+     */
+    @Override
+    public boolean contains(V v) {
+        return false;
+    }
+
+    /**
+     * Returns the vertex with the given label.
+     *
+     * @param v the vertex label
+     * @return the vertex with the given label
+     */
+    @Override
+    public Vertex<V> get(V v) {
+        return null;
+    }
+
+    /**
+     * Removes the vertex with the given label from this graph.
+     *
+     * @param v the vertex label
+     * @return
+     */
+    @Override
+    public V remove(V v) {
+        return null;
+    }
+
+    /**
+     * Adds a new edge to this graph.
+     *
+     * @param u     the label of the source vertex
+     * @param v     the label of the destination vertex
+     * @param label the label of the new edge
+     */
+    @Override
+    public void addEdge(V u, V v, E label) {
+
+    }
+
+    /**
+     * Returns true if this graph contains an edge with the given source and destination vertex
+     * labels.
+     *
+     * @param u the label of the source vertex
+     * @param v the label of the destination vertex
+     * @return true if this graph contains an edge with the given source and destination vertex
+     * labels.
+     */
+    @Override
+    public boolean containsEdge(V u, V v) {
+        return false;
+    }
+
+    /**
+     * Returns the edge with the given source and destination labels.
+     *
+     * @param u the label of the source vertex
+     * @param v the destination vertex
+     * @return the edge with the given source and destination labels
+     */
+    @Override
+    public Edge<V, E> getEdge(V u, V v) {
+        return null;
+    }
+
+    /**
+     * Removes the edge with the given source and destination labels.
+     *
+     * @param u the label of the source vertex
+     * @param v the destination vertex
+     * @return the label of the edge with the given source and destination labels
+     */
+    @Override
+    public E removeEdge(V u, V v) {
+        return null;
+    }
+
+    /**
+     * Returns the degree of this vertex.
+     *
+     * @param v the label of this vertex
+     * @return the degree of this vertex
+     */
+    @Override
+    public int degree(V v) {
+        return 0;
+    }
+
+    /**
+     * Returns an iterator over the vertices of this graph.
+     *
+     * @return an iterator over the vertices of this graph
+     */
+    @Override
+    public Iterator<Vertex<V>> vertices() {
+        return null;
+    }
+
+    /**
+     * Returns an iterator over all the destination vertices that are adjacent to the specified
+     * source vertex.
+     *
+     * @param u the source vertex label
+     * @return an iterator over all the destination vertices that are adjacent to the specified
+     * source vertex.
+     */
+    @Override
+    public Iterator<Vertex<V>> adjacent(V u) {
+        return null;
+    }
+
+    /**
+     * Returns an iterator over the edges in this graph.
+     *
+     * @return an iterator over the edges in this graph
+     */
+    @Override
+    public Iterator<Edge<V, E>> edges() {
+        return null;
+    }
+
+    /**
+     * Clears this graph.
+     */
+    @Override
+    public void clear() {
+
+    }
 }

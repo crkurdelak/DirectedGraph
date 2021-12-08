@@ -10,6 +10,9 @@ import java.util.Iterator;
  */
 public abstract class DirectedGraph<V, E> {
     // TODO implement class
+    private int _size;
+    private int _currentIndex;
+    private int _edgeCount;
 
     /**
      * Adds a new vertex to this graph.
@@ -93,7 +96,9 @@ public abstract class DirectedGraph<V, E> {
      *
      * @return the size of this graph
      */
-    public abstract int size();
+    public int size() {
+        return _size;
+    }
 
 
     /**
@@ -110,7 +115,9 @@ public abstract class DirectedGraph<V, E> {
      *
      * @return the number of edges in this graph
      */
-    public abstract int edgeCount();
+    public int edgeCount() {
+        return _edgeCount;
+    }
 
 
     /**
@@ -122,9 +129,12 @@ public abstract class DirectedGraph<V, E> {
 
 
     /**
+     * Returns an iterator over all the destination vertices that are adjacent to the specified
+     * source vertex.
      *
-     * @param u
-     * @return
+     * @param u the source vertex label
+     * @return an iterator over all the destination vertices that are adjacent to the specified
+     * source vertex.
      */
     public abstract Iterator<Vertex<V>> adjacent(V u);
 
@@ -148,6 +158,8 @@ public abstract class DirectedGraph<V, E> {
      *
      * @return true if this graph is empty
      */
-    public abstract boolean isEmpty();
+    public boolean isEmpty() {
+        return this.size() == 0;
+    }
 }
 

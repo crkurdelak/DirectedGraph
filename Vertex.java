@@ -7,4 +7,31 @@
  */
 public class Vertex<V> {
     private V _label;
+
+    /**
+     *
+     * @param label
+     */
+    public Vertex(V label) {
+        // TODO implement ctor
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    public V getLabel() {
+        // TODO implement getLabel
+    }
+
+
+    /**
+     *
+     * @param o
+     * @return
+     */
+    public boolean equals(Vertex<V> o) {
+        // TODO implement equals
+    }
 }
