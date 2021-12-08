@@ -20,7 +20,9 @@ public class Edge<V, E> {
      * @param label the label of this edge
      */
     public Edge(V u, V v, E label) {
-        // TODO implement ctor
+        _src = u;
+        _dest = v;
+        _label = label;
     }
 
 
@@ -30,7 +32,7 @@ public class Edge<V, E> {
      * @return the source vertex of this edge
      */
     public V getU() {
-        // TODO implement getU
+        return _src;
     }
 
 
@@ -40,7 +42,7 @@ public class Edge<V, E> {
      * @return the destination vertex of this edge
      */
     public V getV() {
-        // TODO implement getV
+        return _dest;
     }
 
 
@@ -50,7 +52,7 @@ public class Edge<V, E> {
      * @return the label of this edge
      */
     public E getLabel() {
-        // TODO implement getLabel
+        return _label;
     }
 
 
@@ -60,7 +62,7 @@ public class Edge<V, E> {
      * @param label the new label of this edge
      */
     public void setLabel(E label) {
-        // TODO implement setLabel
+        _label = label;
     }
 
 
@@ -73,6 +75,6 @@ public class Edge<V, E> {
      * @return true if this edge is equal to the given edge
      */
     public boolean equals(Edge<V,E> o) {
-        // TODO implement equals
+        return (this.getU().equals(o.getU()) && this.getV().equals(o.getV()));
     }
 }
