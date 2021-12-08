@@ -1,28 +1,39 @@
 import java.util.Iterator;
 
 /**
- * TODO write description
+ * A directed graph backed by a matrix.
  *
  * @author ckurdelak20@gorgefox.edu
  */
 public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     private Vertex<V>[] _vertices;
     private Edge<V, E>[][] _edges; // 2D array
+    private int _size;
+    private int _currentIndex;
+    private int _edgeCount;
+
+    private static int _DEFAULT_CAPACITY = 10;
 
     /**
-     *
+     * Creates a new matrix graph with an initial capacity of 10.
      */
     public MatrixGraph() {
-        // TODO implement ctors
+        this(_DEFAULT_CAPACITY);
     }
 
 
     /**
+     * Creates a new matrix graph with the given initial capacity.
      *
-     * @param initialCapacity
+     * @param initialCapacity the initial capacity of this matrix graph
      */
+    @SuppressWarnings("unchecked")
     public MatrixGraph(int initialCapacity) {
-
+        _vertices = (Vertex<V>[]) new Object[initialCapacity];
+        _edges = (Edge<V, E>[][]) new Object[initialCapacity][initialCapacity];
+        _size = 0;
+        _currentIndex = 0;
+        _edgeCount = 0;
     }
 
 
@@ -195,5 +206,16 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     @Override
     public void clear() {
 
+    }
+
+
+    /**
+     * Returns the index of the vertex with the given label.
+     *
+     * @param label the label of the vertex to locate
+     * @return the index of the vertex with the given label
+     */
+    private int findIndex(V label) {
+        // TODO implement findIndex
     }
 }
