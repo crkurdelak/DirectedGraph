@@ -281,8 +281,14 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public Iterator<Vertex<V>> vertices() {
-        // TODO implement vertices
-        return null;
+        ArrayList<Vertex<V>> vertices = new ArrayList<Vertex<V>>();
+        for (int i = 0; i < _vertices.length; i++) {
+            if (_vertices[i] != null) {
+                vertices.add(_vertices[i]);
+            }
+        }
+
+        return vertices.iterator();
     }
 
 
@@ -293,6 +299,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      * @param u the source vertex label
      * @return an iterator over all the destination vertices that are adjacent to the specified
      * source vertex.
+     * @throws NoSuchVertexException if the specified vertex does not exist
      */
     @Override
     public Iterator<Vertex<V>> adjacent(V u) {
@@ -321,8 +328,16 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public Iterator<Edge<V, E>> edges() {
-        // TODO implement edges
-        return null;
+        ArrayList<Edge<V, E>> edges = new ArrayList<Edge<V, E>>();
+        for (int i = 0; i < _edges.length; i++) {
+            for (int j = 0; j < _edges.length; j++) {
+                if (_edges[i][j] != null) {
+                    edges.add(_edges[i][j]);
+                }
+            }
+        }
+
+        return edges.iterator();
     }
 
 

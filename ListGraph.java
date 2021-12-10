@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * TODO write description
+ * A directed graph backed by a hashmap
  *
  * @author ckurdelak20@gorgefox.edu
  */
@@ -171,6 +171,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      * @param u the source vertex label
      * @return an iterator over all the destination vertices that are adjacent to the specified
      * source vertex.
+     * @throws NoSuchVertexException if the specified vertex does not exist
      */
     @Override
     public Iterator<Vertex<V>> adjacent(V u) {

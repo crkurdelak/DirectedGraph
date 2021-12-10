@@ -142,6 +142,7 @@ public abstract class DirectedGraph<V, E> {
      * @param u the source vertex label
      * @return an iterator over all the destination vertices that are adjacent to the specified
      * source vertex.
+     * @throws NoSuchVertexException if the specified vertex does not exist
      */
     public abstract Iterator<Vertex<V>> adjacent(V u);
 
