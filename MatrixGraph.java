@@ -230,10 +230,15 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     @Override
     public E removeEdge(V u, V v) {
         if (this.containsEdge(u, v)) {
-            // TODO implement removeEdge
+            int srcIndex = this.indexOf(u);
+            int destIndex = this.indexOf(v);
+
+            Edge<V, E> oldEdge = _edges[srcIndex][destIndex];
+            _edges[srcIndex][destIndex] = null;
+
             _edgeCount--;
 
-            return null;
+            return oldEdge.getLabel();
         }
         else {
             throw new NoSuchEdgeException();
@@ -246,11 +251,26 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      *
      * @param v the label of this vertex
      * @return the degree of this vertex
+     * @throws NoSuchVertexException if the specified vertex does not exist
      */
     @Override
     public int degree(V v) {
         // TODO implement degree
-        return 0;
+        if (this.contains(v)) {
+            int index = this.indexOf(v);
+            int count = 0;
+
+            for (int i = 0; i < _edges.length; i++) {
+                if (_edges[0][i].equals(v)) {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+        else {
+            throw new NoSuchVertexException();
+        }
     }
 
 
@@ -298,7 +318,15 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public void clear() {
-        // TODO implement clear
+        for (int i = 0; i < _vertices.length; i++) {
+            _vertices[i] = null;
+        }
+        for (int i = 0; i < _edges.length; i++) {
+            _edges[0][i] = null;
+        }
+        for (int i = 0; i < _edges.length; i++) {
+            _edges[i][0] = null;
+        }
     }
 
 

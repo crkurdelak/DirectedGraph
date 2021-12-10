@@ -112,6 +112,7 @@ public abstract class DirectedGraph<V, E> {
      *
      * @param v the label of this vertex
      * @return the degree of this vertex
+     * @throws NoSuchVertexException if the specified vertex does not exist
      */
     public abstract int degree(V v);
 

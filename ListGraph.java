@@ -147,6 +147,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      *
      * @param v the label of this vertex
      * @return the degree of this vertex
+     * @throws NoSuchVertexException if the specified vertex does not exist
      */
     @Override
     public int degree(V v) {
