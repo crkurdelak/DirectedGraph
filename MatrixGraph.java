@@ -9,7 +9,7 @@ import java.util.Objects;
 public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     private Vertex<V>[] _vertices;
     private Edge<V, E>[][] _edges; // 2D array
-    private int _vertexCount;
+    private int _size; // the actual number of vertices in the graph
     private int _edgeCount;
     private int _currentIndex;
 
@@ -34,7 +34,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     public MatrixGraph(int initialCapacity) {
         _vertices = (Vertex<V>[]) new Object[initialCapacity];
         _edges = (Edge<V, E>[][]) new Object[initialCapacity][initialCapacity];
-        _vertexCount = 0;
+        _size = 0;
         _edgeCount = 0;
         _currentIndex = 0;
     }
@@ -77,7 +77,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
         // linear search for first null position
         // if there isn't any, grow
 
-        _vertexCount++;
+        _size++;
     }
 
     /**
@@ -111,8 +111,13 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     @Override
     public V remove(V v) {
         // remove vertex A:
+        Vertex<V> oldVertex = this.get(v);
         // null out vertex
+        _vertices[this.findVertexIndex(v)] = null;
         // null out all edges where A was source
+        for (int i = 0; i < _edges.length; i++) {
+            // TODO find out how to do this
+        }
         // null out every edge where A was destination
 
         // to remove a vertex: O(3|v| + 1) = O(|v|)
@@ -123,9 +128,9 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
         // O(|v|) for-loop to remove edges from _edges where vertex is source
         // O(|v|) for-loop to remove edges from _edges where vertex is destination
 
-        _vertexCount--;
+        _size--;
 
-        return null;
+        return oldVertex.getLabel();
     }
 
     /**
