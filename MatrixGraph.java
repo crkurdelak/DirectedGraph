@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * A directed graph backed by a matrix.
@@ -8,17 +9,19 @@ import java.util.Iterator;
 public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     private Vertex<V>[] _vertices;
     private Edge<V, E>[][] _edges; // 2D array
-    private int _size;
-    private int _currentIndex;
+    private int _vertexCount;
     private int _edgeCount;
+    private int _currentIndex;
 
-    private static int _DEFAULT_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final int GROWTH_FACTOR = 10;
+    private static final int NOT_FOUND = -1;
 
     /**
      * Creates a new matrix graph with an initial capacity of 10.
      */
     public MatrixGraph() {
-        this(_DEFAULT_CAPACITY);
+        this(DEFAULT_CAPACITY);
     }
 
 
@@ -27,13 +30,13 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      *
      * @param initialCapacity the initial capacity of this matrix graph
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked"})
     public MatrixGraph(int initialCapacity) {
         _vertices = (Vertex<V>[]) new Object[initialCapacity];
         _edges = (Edge<V, E>[][]) new Object[initialCapacity][initialCapacity];
-        _size = 0;
-        _currentIndex = 0;
+        _vertexCount = 0;
         _edgeCount = 0;
+        _currentIndex = 0;
     }
 
 
@@ -70,7 +73,11 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public void add(V v) {
+        // add node:
+        // linear search for first null position
+        // if there isn't any, grow
 
+        _vertexCount++;
     }
 
     /**
@@ -103,6 +110,21 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public V remove(V v) {
+        // remove vertex A:
+        // null out vertex
+        // null out all edges where A was source
+        // null out every edge where A was destination
+
+        // to remove a vertex: O(3|v| + 1) = O(|v|)
+        // |v| =  "number of vertices"
+        // |E| = "number of edges"
+        // O(|v|) linear search of _vertices to determine index
+        // O(1) remove vertex from _vertices
+        // O(|v|) for-loop to remove edges from _edges where vertex is source
+        // O(|v|) for-loop to remove edges from _edges where vertex is destination
+
+        _vertexCount--;
+
         return null;
     }
 
@@ -115,7 +137,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public void addEdge(V u, V v, E label) {
-
+        _edgeCount++;
     }
 
     /**
@@ -153,6 +175,8 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public E removeEdge(V u, V v) {
+        _edgeCount--;
+
         return null;
     }
 
@@ -210,12 +234,111 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
 
 
     /**
-     * Returns the index of the vertex with the given label.
+     * Returns the index of the vertex with the given label, or -1 if no such vertex exists.
      *
      * @param label the label of the vertex to locate
      * @return the index of the vertex with the given label
+     *         -1 if no such vertex exists
      */
-    private int findIndex(V label) {
-        // TODO implement findIndex
+    private int findVertexIndex(V label) {
+        int index = NOT_FOUND;
+        boolean isFound = false;
+        int i = 0;
+        while (!isFound && i < _vertices.length) {
+            if (Objects.equals(label, _vertices[i])) {
+                index = i;
+                isFound = true;
+            }
+            i++;
+        }
+        return index;
+    }
+
+
+    /**
+     * Returns the index of the edge with the given source and destination, or -1 if not such
+     * edge exists.
+     *
+     * @param u the label of the source vertex
+     * @param v the label of the destination vertex
+     * @return a 1x2 array containing the row index and column index of the edge with the given
+     * source and destination
+     *         the array [-1, -1] if no such edge exists
+     */
+    private int[] findEdgeIndex(V u, V v) {
+        // TODO implement findEdgeIndex
+        // linear search rows to find source
+        // linear search columns to find destination
+        int[] index = new int[] {NOT_FOUND, NOT_FOUND};
+        boolean rowIndexFound = false;
+        boolean columnIndexFound = false;
+        int i = 0;
+        int j = 0;
+        while (!rowIndexFound && i < _edges.length) {
+            if (Objects.equals(u, _edges[i])) {
+                index[0] = i;
+                rowIndexFound = true;
+                while (!columnIndexFound && j < _edges.length) {
+                    // TODO find out how to do this index thing
+                    if (Objects.equals(v, _edges[][j])) {
+                        index[1] = j;
+                        columnIndexFound = true;
+                    }
+                    j++;
+                }
+            }
+            i++;
+        }
+        return index;
+    }
+
+
+    // growth strategy:
+    // *2 growth
+    // O(|v|^2) copy n*n items to new array, to save space
+    // OR
+    // grow by + 1, + k
+
+
+    /**
+     * Grows the backing array by increasing its capacity by 10.
+     */
+    @SuppressWarnings({"unchecked"})
+    private void growArray() {
+        if (_vertices.length < Integer.MAX_VALUE) {
+            Vertex<V>[] newArray = (Vertex<V>[]) new Object[_size + GROWTH_FACTOR];
+            for (int i = 0; i < _vertices.length; i++) {
+                newArray[i] = _vertices[i];
+            }
+            _vertices = newArray;
+        }
+        else {
+            throw new OutOfMemoryError();
+        }
+    }
+
+
+    /**
+     * Grows the backing matrix by increasing its capacity by 10.
+     */
+    @SuppressWarnings({"unchecked"})
+    private void growMatrix() {
+        // TODO make sure this is right
+        if (_edges.length < Integer.MAX_VALUE) {
+            // _edges = (Edge<V, E>[][]) new Object[initialCapacity][initialCapacity];
+            Edge<V, E>[][] newMatrix =
+                    (Edge<V, E>[][]) new Object[_size + GROWTH_FACTOR][_size + GROWTH_FACTOR];
+            // for each row
+            for (int i = 0; i < _edges.length; i++) {
+                // for each column
+                for (int j = 0; j < _edges.length; j++) {
+                    newMatrix[i][j] = _edges[i][j];
+                }
+            }
+            _edges = newMatrix;
+        }
+        else {
+            throw new OutOfMemoryError();
+        }
     }
 }
