@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
 
@@ -255,13 +256,12 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public int degree(V v) {
-        // TODO implement degree
         if (this.contains(v)) {
             int index = this.indexOf(v);
             int count = 0;
 
             for (int i = 0; i < _edges.length; i++) {
-                if (_edges[0][i].equals(v)) {
+                if (_edges[index][i].equals(v)) {
                     count++;
                 }
             }
@@ -296,8 +296,21 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public Iterator<Vertex<V>> adjacent(V u) {
-        // TODO implement adjacent
-        return null;
+        if (this.contains(u)) {
+            int index = this.indexOf(u);
+            ArrayList<Vertex<V>> adjacentVertices = new ArrayList<Vertex<V>>();
+
+            for (int i = 0; i < _edges.length; i++) {
+                if (_edges[index][i].equals(u)) {
+                    adjacentVertices.add(this.get(_edges[index][i].getV()));
+                }
+            }
+
+            return adjacentVertices.iterator();
+        }
+        else {
+            throw new NoSuchVertexException();
+        }
     }
 
 
