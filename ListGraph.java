@@ -42,10 +42,12 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
     maybe add entry of outer map, but NOT of inner maps
      */
 
+
     /**
      * Adds a new vertex to this graph.
      *
      * @param v the label of the new vertex
+     * @throws DuplicateVertexException if the specified vertex already exists
      */
     @Override
     public void add(V v) {
@@ -68,6 +70,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      *
      * @param v the vertex label
      * @return the vertex with the given label
+     * @throws NoSuchVertexException if the specified vertex does not exist
      */
     @Override
     public Vertex<V> get(V v) {
@@ -78,7 +81,8 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      * Removes the vertex with the given label from this graph.
      *
      * @param v the vertex label
-     * @return
+     * @return the vertex with the given label
+     * @throws NoSuchVertexException if the specified vertex does not exist
      */
     @Override
     public V remove(V v) {
@@ -91,6 +95,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      * @param u     the label of the source vertex
      * @param v     the label of the destination vertex
      * @param label the label of the new edge
+     * @throws DuplicateEdgeException if the specified edge already exists
      */
     @Override
     public void addEdge(V u, V v, E label) {
@@ -117,6 +122,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      * @param u the label of the source vertex
      * @param v the destination vertex
      * @return the edge with the given source and destination labels
+     * @throws NoSuchEdgeException if the specified edge does not exist
      */
     @Override
     public Edge<V, E> getEdge(V u, V v) {
@@ -129,6 +135,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      * @param u the label of the source vertex
      * @param v the destination vertex
      * @return the label of the edge with the given source and destination labels
+     * @throws NoSuchEdgeException if the specified edge does not exist
      */
     @Override
     public E removeEdge(V u, V v) {

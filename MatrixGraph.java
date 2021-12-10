@@ -11,7 +11,6 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     private Edge<V, E>[][] _edges; // 2D array
     private int _size; // the actual number of vertices in the graph
     private int _edgeCount;
-    private int _currentIndex;
 
     private static final int DEFAULT_CAPACITY = 10;
     private static final int GROWTH_FACTOR = 10;
@@ -36,7 +35,6 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
         _edges = (Edge<V, E>[][]) new Object[initialCapacity][initialCapacity];
         _size = 0;
         _edgeCount = 0;
-        _currentIndex = 0;
     }
 
 
@@ -70,15 +68,31 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      * Adds a new vertex to this graph.
      *
      * @param v the label of the new vertex
+     * @throws DuplicateVertexException if the specified vertex already exists
      */
     @Override
     public void add(V v) {
-        // add node:
-        // linear search for first null position
-        // if there isn't any, grow
+        if (this.contains(v)) {
+            // add node:
+            // linear search for first null position
+            int index = indexOf(null);
+            // if there isn't any, grow
+            if (index == NOT_FOUND) {
+                int oldLast = _vertices.length;
+                this.growArray();
+                index = oldLast + 1;
+            }
 
-        _size++;
+            Vertex<V> newVertex = new Vertex<V>(v);
+            _vertices[index] = newVertex;
+
+            _size++;
+        }
+        else {
+            throw new DuplicateVertexException();
+        }
     }
+
 
     /**
      * Returns true if this graph contains the given vertex label.
@@ -88,50 +102,57 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public boolean contains(V v) {
-        return false;
+        return this.indexOf(v) != NOT_FOUND;
     }
+
 
     /**
      * Returns the vertex with the given label.
      *
      * @param v the vertex label
      * @return the vertex with the given label
+     * @throws NoSuchVertexException if the specified vertex does not exist
      */
     @Override
     public Vertex<V> get(V v) {
-        return null;
+        if (this.contains(v)) {
+            return _vertices[indexOf(v)];
+        }
+        else {
+            throw new NoSuchVertexException();
+        }
     }
+
 
     /**
      * Removes the vertex with the given label from this graph.
      *
      * @param v the vertex label
-     * @return
+     * @return the vertex with the given label
+     * @throws NoSuchVertexException if the specified vertex does not exist
      */
     @Override
     public V remove(V v) {
-        // remove vertex A:
-        Vertex<V> oldVertex = this.get(v);
-        // null out vertex
-        _vertices[this.findVertexIndex(v)] = null;
-        // null out all edges where A was source
-        for (int i = 0; i < _edges.length; i++) {
-            // TODO find out how to do this
+        if (this.contains(v)) {
+            Vertex<V> oldVertex = this.get(v);
+            _vertices[this.indexOf(v)] = null;
+
+            for (int i = 0; i < _edges.length; i++) {
+                _edges[0][i] = null;
+            }
+            for (int i = 0; i < _edges.length; i++) {
+                _edges[i][0] = null;
+            }
+
+            _size--;
+
+            return v;
         }
-        // null out every edge where A was destination
-
-        // to remove a vertex: O(3|v| + 1) = O(|v|)
-        // |v| =  "number of vertices"
-        // |E| = "number of edges"
-        // O(|v|) linear search of _vertices to determine index
-        // O(1) remove vertex from _vertices
-        // O(|v|) for-loop to remove edges from _edges where vertex is source
-        // O(|v|) for-loop to remove edges from _edges where vertex is destination
-
-        _size--;
-
-        return oldVertex.getLabel();
+        else {
+            throw new NoSuchVertexException();
+        }
     }
+
 
     /**
      * Adds a new edge to this graph.
@@ -139,11 +160,24 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      * @param u     the label of the source vertex
      * @param v     the label of the destination vertex
      * @param label the label of the new edge
+     * @throws DuplicateEdgeException if the specified edge already exists
      */
     @Override
     public void addEdge(V u, V v, E label) {
-        _edgeCount++;
+        if (!this.containsEdge(u, v)) {
+            Edge<V, E> newEdge = new Edge<V, E>(u, v, label);
+            int srcIndex = this.indexOf(u);
+            int destIndex = this.indexOf(v);
+
+            _edges[srcIndex][destIndex] = newEdge;
+
+            _edgeCount++;
+        }
+        else {
+            throw new DuplicateEdgeException();
+        }
     }
+
 
     /**
      * Returns true if this graph contains an edge with the given source and destination vertex
@@ -156,8 +190,12 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public boolean containsEdge(V u, V v) {
-        return false;
+        int srcIndex = this.indexOf(u);
+        int destIndex = this.indexOf(v);
+
+        return srcIndex != NOT_FOUND && destIndex != NOT_FOUND;
     }
+
 
     /**
      * Returns the edge with the given source and destination labels.
@@ -165,11 +203,21 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      * @param u the label of the source vertex
      * @param v the destination vertex
      * @return the edge with the given source and destination labels
+     * @throws NoSuchEdgeException if the specified edge does not exist
      */
     @Override
     public Edge<V, E> getEdge(V u, V v) {
-        return null;
+        if (this.containsEdge(u, v)) {
+            int srcIndex = indexOf(u);
+            int destIndex = indexOf(v);
+
+            return _edges[srcIndex][destIndex];
+        }
+        else {
+            throw new NoSuchEdgeException();
+        }
     }
+
 
     /**
      * Removes the edge with the given source and destination labels.
@@ -177,13 +225,21 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      * @param u the label of the source vertex
      * @param v the destination vertex
      * @return the label of the edge with the given source and destination labels
+     * @throws NoSuchEdgeException if the given edge does not exist
      */
     @Override
     public E removeEdge(V u, V v) {
-        _edgeCount--;
+        if (this.containsEdge(u, v)) {
+            // TODO implement removeEdge
+            _edgeCount--;
 
-        return null;
+            return null;
+        }
+        else {
+            throw new NoSuchEdgeException();
+        }
     }
+
 
     /**
      * Returns the degree of this vertex.
@@ -193,8 +249,10 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public int degree(V v) {
+        // TODO implement degree
         return 0;
     }
+
 
     /**
      * Returns an iterator over the vertices of this graph.
@@ -203,8 +261,10 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public Iterator<Vertex<V>> vertices() {
+        // TODO implement vertices
         return null;
     }
+
 
     /**
      * Returns an iterator over all the destination vertices that are adjacent to the specified
@@ -216,8 +276,10 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public Iterator<Vertex<V>> adjacent(V u) {
+        // TODO implement adjacent
         return null;
     }
+
 
     /**
      * Returns an iterator over the edges in this graph.
@@ -226,15 +288,17 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public Iterator<Edge<V, E>> edges() {
+        // TODO implement edges
         return null;
     }
+
 
     /**
      * Clears this graph.
      */
     @Override
     public void clear() {
-
+        // TODO implement clear
     }
 
 
@@ -245,7 +309,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      * @return the index of the vertex with the given label
      *         -1 if no such vertex exists
      */
-    private int findVertexIndex(V label) {
+    private int indexOf(V label) {
         int index = NOT_FOUND;
         boolean isFound = false;
         int i = 0;
@@ -261,52 +325,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
 
 
     /**
-     * Returns the index of the edge with the given source and destination, or -1 if not such
-     * edge exists.
-     *
-     * @param u the label of the source vertex
-     * @param v the label of the destination vertex
-     * @return a 1x2 array containing the row index and column index of the edge with the given
-     * source and destination
-     *         the array [-1, -1] if no such edge exists
-     */
-    private int[] findEdgeIndex(V u, V v) {
-        // TODO implement findEdgeIndex
-        // linear search rows to find source
-        // linear search columns to find destination
-        int[] index = new int[] {NOT_FOUND, NOT_FOUND};
-        boolean rowIndexFound = false;
-        boolean columnIndexFound = false;
-        int i = 0;
-        int j = 0;
-        while (!rowIndexFound && i < _edges.length) {
-            if (Objects.equals(u, _edges[i])) {
-                index[0] = i;
-                rowIndexFound = true;
-                while (!columnIndexFound && j < _edges.length) {
-                    // TODO find out how to do this index thing
-                    if (Objects.equals(v, _edges[][j])) {
-                        index[1] = j;
-                        columnIndexFound = true;
-                    }
-                    j++;
-                }
-            }
-            i++;
-        }
-        return index;
-    }
-
-
-    // growth strategy:
-    // *2 growth
-    // O(|v|^2) copy n*n items to new array, to save space
-    // OR
-    // grow by + 1, + k
-
-
-    /**
-     * Grows the backing array by increasing its capacity by 10.
+     * Grows the backing array of vertices by increasing its capacity by 10.
      */
     @SuppressWarnings({"unchecked"})
     private void growArray() {
@@ -324,13 +343,11 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
 
 
     /**
-     * Grows the backing matrix by increasing its capacity by 10.
+     * Grows the backing matrix of edges by increasing its capacity by 10.
      */
     @SuppressWarnings({"unchecked"})
     private void growMatrix() {
-        // TODO make sure this is right
         if (_edges.length < Integer.MAX_VALUE) {
-            // _edges = (Edge<V, E>[][]) new Object[initialCapacity][initialCapacity];
             Edge<V, E>[][] newMatrix =
                     (Edge<V, E>[][]) new Object[_size + GROWTH_FACTOR][_size + GROWTH_FACTOR];
             // for each row
