@@ -1,3 +1,4 @@
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -12,37 +13,18 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
     // vertex label -> Vertex object
 
     private HashMap<V, HashMap<V, Edge<V, E>>> _edges;
-
-
     // outer HashMap: source vertex label -> inner map
     //      inner HashMap: destination vertex label -> Edge from source to destination
 
 
-    // G.addEdge(B, C)
-    // check for duplicate edges
-    // create entry of outer map if necessary
-    // create entry of inner map
-    // create edge
-
-
-    /*
-    G.removeEdge(A, B)
-    find source vertex in outer layer
-    find entry in inner map, remove it
+    /**
+     * Creates a new list graph.
      */
+    public ListGraph() {
+        _vertices = new HashMap<V, Vertex<V>>();
+        _edges = new HashMap<V, HashMap<V, Edge<V, E>>>();
+    }
 
-    /*
-    G.removeVertex(B)
-    remove B
-    remove any edges with B as source
-    remove any edges with B as destination
-     */
-
-    /*
-    G.add(D)
-    create vertex
-    maybe add entry of outer map, but NOT of inner maps
-     */
 
     /**
      * Adds a new vertex to this graph.
@@ -52,7 +34,13 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public void add(V v) {
-
+        if (!this.contains(v)) {
+            Vertex<V> newVertex = new Vertex<V>(v);
+            _vertices.put(v, newVertex);
+        }
+        else {
+            throw new DuplicateVertexException();
+        }
     }
 
 
@@ -64,7 +52,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public boolean contains(V v) {
-        return false;
+        return _vertices.containsKey(v);
     }
 
 
@@ -77,7 +65,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public Vertex<V> get(V v) {
-        return null;
+        return _vertices.get(v);
     }
 
 
@@ -90,7 +78,20 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public V remove(V v) {
-        return null;
+        if (this.contains(v)) {
+            Vertex<V> oldVertex = _vertices.remove(v);
+            _edges.remove(v);
+
+            Collection<HashMap<V, Edge<V, E>>> values = _edges.values();
+            for (HashMap<V, Edge<V, E>> value : values) {
+                value.remove(v);
+            }
+
+            return oldVertex.getLabel();
+        }
+        else {
+            throw new NoSuchVertexException();
+        }
     }
 
 
@@ -105,7 +106,23 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public void addEdge(V u, V v, E label) {
+        if (this.contains(u) && this.contains(v)) {
+            if (!this.containsEdge(u, v)) {
+                Edge<V, E> newEdge = new Edge<V, E>(u, v, label);
 
+                if (!_edges.containsKey(u)) {
+                    _edges.put(u, new HashMap<V, Edge<V, E>>());
+                }
+
+                _edges.get(u).put(v, newEdge);
+            }
+            else {
+                throw new DuplicateEdgeException();
+            }
+        }
+        else {
+            throw new NoSuchVertexException();
+        }
     }
 
 
@@ -121,7 +138,12 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public boolean containsEdge(V u, V v) {
-        return false;
+        if (this.contains(u) && this.contains(v)) {
+            return _edges.containsKey(u) && _edges.get(u).containsKey(v);
+        }
+        else {
+            throw new NoSuchVertexException();
+        }
     }
 
 
@@ -136,7 +158,17 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public Edge<V, E> getEdge(V u, V v) {
-        return null;
+        if (this.contains(u) && this.contains(v)) {
+            if (this.containsEdge(u, v)) {
+                return _edges.get(u).get(v);
+            }
+            else {
+                throw new NoSuchEdgeException();
+            }
+        }
+        else {
+            throw new NoSuchVertexException();
+        }
     }
 
 
@@ -151,7 +183,19 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public E removeEdge(V u, V v) {
-        return null;
+        if (this.contains(u) && this.contains(v)) {
+            if (this.containsEdge(u, v)) {
+                Edge<V, E> oldEdge = _edges.get(u).remove(v);
+
+                return oldEdge.getLabel();
+            }
+            else {
+                throw new NoSuchEdgeException();
+            }
+        }
+        else {
+            throw new NoSuchVertexException();
+        }
     }
 
 
@@ -210,6 +254,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public void clear() {
-
+        _vertices.clear();
+        _edges.clear();
     }
 }
