@@ -7,10 +7,12 @@ import java.util.Iterator;
  * @author ckurdelak20@gorgefox.edu
  */
 public class ListGraph<V, E> extends DirectedGraph<V, E> {
+    // TODO implement class
     private HashMap<V, Vertex<V>> _vertices;
     // vertex label -> Vertex object
 
     private HashMap<V, HashMap<V, Edge<V, E>>> _edges;
+
 
     // outer HashMap: source vertex label -> inner map
     //      inner HashMap: destination vertex label -> Edge from source to destination
@@ -42,7 +44,6 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
     maybe add entry of outer map, but NOT of inner maps
      */
 
-
     /**
      * Adds a new vertex to this graph.
      *
@@ -54,6 +55,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
 
     }
 
+
     /**
      * Returns true if this graph contains the given vertex label.
      *
@@ -64,6 +66,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
     public boolean contains(V v) {
         return false;
     }
+
 
     /**
      * Returns the vertex with the given label.
@@ -77,6 +80,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
         return null;
     }
 
+
     /**
      * Removes the vertex with the given label from this graph.
      *
@@ -89,6 +93,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
         return null;
     }
 
+
     /**
      * Adds a new edge to this graph.
      *
@@ -96,11 +101,13 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      * @param v     the label of the destination vertex
      * @param label the label of the new edge
      * @throws DuplicateEdgeException if the specified edge already exists
+     * @throws NoSuchVertexException  if the specified source or destination does not exist
      */
     @Override
     public void addEdge(V u, V v, E label) {
 
     }
+
 
     /**
      * Returns true if this graph contains an edge with the given source and destination vertex
@@ -110,11 +117,13 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      * @param v the label of the destination vertex
      * @return true if this graph contains an edge with the given source and destination vertex
      * labels.
+     * @throws NoSuchVertexException if the specified source or destination does not exist
      */
     @Override
     public boolean containsEdge(V u, V v) {
         return false;
     }
+
 
     /**
      * Returns the edge with the given source and destination labels.
@@ -122,12 +131,14 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      * @param u the label of the source vertex
      * @param v the destination vertex
      * @return the edge with the given source and destination labels
-     * @throws NoSuchEdgeException if the specified edge does not exist
+     * @throws NoSuchEdgeException   if the specified edge does not exist
+     * @throws NoSuchVertexException if the specified source or destination does not exist
      */
     @Override
     public Edge<V, E> getEdge(V u, V v) {
         return null;
     }
+
 
     /**
      * Removes the edge with the given source and destination labels.
@@ -135,12 +146,14 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      * @param u the label of the source vertex
      * @param v the destination vertex
      * @return the label of the edge with the given source and destination labels
-     * @throws NoSuchEdgeException if the specified edge does not exist
+     * @throws NoSuchEdgeException   if the specified edge does not exist
+     * @throws NoSuchVertexException if the specified source or destination does not exist
      */
     @Override
     public E removeEdge(V u, V v) {
         return null;
     }
+
 
     /**
      * Returns the degree of this vertex.
@@ -154,6 +167,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
         return 0;
     }
 
+
     /**
      * Returns an iterator over the vertices of this graph.
      *
@@ -163,6 +177,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
     public Iterator<Vertex<V>> vertices() {
         return null;
     }
+
 
     /**
      * Returns an iterator over all the destination vertices that are adjacent to the specified
@@ -178,6 +193,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
         return null;
     }
 
+
     /**
      * Returns an iterator over the edges in this graph.
      *
@@ -187,6 +203,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
     public Iterator<Edge<V, E>> edges() {
         return null;
     }
+
 
     /**
      * Clears this graph.

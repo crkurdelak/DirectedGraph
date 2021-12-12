@@ -162,20 +162,25 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      * @param v     the label of the destination vertex
      * @param label the label of the new edge
      * @throws DuplicateEdgeException if the specified edge already exists
+     * @throws NoSuchVertexException if the specified source or destination does not exist
      */
     @Override
     public void addEdge(V u, V v, E label) {
-        if (!this.containsEdge(u, v)) {
-            Edge<V, E> newEdge = new Edge<V, E>(u, v, label);
-            int srcIndex = this.indexOf(u);
-            int destIndex = this.indexOf(v);
+        if (this.contains(u) && this.contains(v)) {
+            if (!this.containsEdge(u, v)) {
+                Edge<V, E> newEdge = new Edge<V, E>(u, v, label);
+                int srcIndex = this.indexOf(u);
+                int destIndex = this.indexOf(v);
 
-            _edges[srcIndex][destIndex] = newEdge;
+                _edges[srcIndex][destIndex] = newEdge;
 
-            _edgeCount++;
+                _edgeCount++;
+            } else {
+                throw new DuplicateEdgeException();
+            }
         }
         else {
-            throw new DuplicateEdgeException();
+            throw new NoSuchVertexException();
         }
     }
 
@@ -188,13 +193,19 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      * @param v the label of the destination vertex
      * @return true if this graph contains an edge with the given source and destination vertex
      * labels.
+     * @throws NoSuchVertexException if the specified source or destination does not exist
      */
     @Override
     public boolean containsEdge(V u, V v) {
-        int srcIndex = this.indexOf(u);
-        int destIndex = this.indexOf(v);
+        if (this.contains(u) && this.contains(v)) {
+            int srcIndex = this.indexOf(u);
+            int destIndex = this.indexOf(v);
 
-        return srcIndex != NOT_FOUND && destIndex != NOT_FOUND;
+            return srcIndex != NOT_FOUND && destIndex != NOT_FOUND;
+        }
+        else {
+            throw new NoSuchVertexException();
+        }
     }
 
 
@@ -205,17 +216,22 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      * @param v the destination vertex
      * @return the edge with the given source and destination labels
      * @throws NoSuchEdgeException if the specified edge does not exist
+     * @throws NoSuchVertexException if the specified source or destination does not exist
      */
     @Override
     public Edge<V, E> getEdge(V u, V v) {
-        if (this.containsEdge(u, v)) {
-            int srcIndex = indexOf(u);
-            int destIndex = indexOf(v);
+        if (this.contains(u) && this.contains(v)) {
+            if (this.containsEdge(u, v)) {
+                int srcIndex = indexOf(u);
+                int destIndex = indexOf(v);
 
-            return _edges[srcIndex][destIndex];
+                return _edges[srcIndex][destIndex];
+            } else {
+                throw new NoSuchEdgeException();
+            }
         }
         else {
-            throw new NoSuchEdgeException();
+            throw new NoSuchVertexException();
         }
     }
 
@@ -227,22 +243,27 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      * @param v the destination vertex
      * @return the label of the edge with the given source and destination labels
      * @throws NoSuchEdgeException if the given edge does not exist
+     * @throws NoSuchVertexException if the specified source or destination does not exist
      */
     @Override
     public E removeEdge(V u, V v) {
-        if (this.containsEdge(u, v)) {
-            int srcIndex = this.indexOf(u);
-            int destIndex = this.indexOf(v);
+        if (this.contains(u) && this.contains(v)) {
+            if (this.containsEdge(u, v)) {
+                int srcIndex = this.indexOf(u);
+                int destIndex = this.indexOf(v);
 
-            Edge<V, E> oldEdge = _edges[srcIndex][destIndex];
-            _edges[srcIndex][destIndex] = null;
+                Edge<V, E> oldEdge = _edges[srcIndex][destIndex];
+                _edges[srcIndex][destIndex] = null;
 
-            _edgeCount--;
+                _edgeCount--;
 
-            return oldEdge.getLabel();
+                return oldEdge.getLabel();
+            } else {
+                throw new NoSuchEdgeException();
+            }
         }
         else {
-            throw new NoSuchEdgeException();
+            throw new NoSuchVertexException();
         }
     }
 

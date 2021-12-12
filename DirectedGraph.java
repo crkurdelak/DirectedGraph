@@ -9,7 +9,6 @@ import java.util.Iterator;
  * @author ckurdelak20@gorgefox.edu
  */
 public abstract class DirectedGraph<V, E> {
-    // TODO implement class
     private int _size;
     private int _currentIndex;
     private int _edgeCount;
@@ -59,6 +58,7 @@ public abstract class DirectedGraph<V, E> {
      * @param v the label of the destination vertex
      * @param label the label of the new edge
      * @throws DuplicateEdgeException if the specified edge already exists
+     * @throws NoSuchVertexException if the specified source or destination does not exist
      */
     public abstract void addEdge(V u, V v, E label);
 
@@ -71,6 +71,7 @@ public abstract class DirectedGraph<V, E> {
      * @param v the label of the destination vertex
      * @return true if this graph contains an edge with the given source and destination vertex
      * labels.
+     * @throws NoSuchVertexException if the specified source or destination does not exist
      */
     public abstract boolean containsEdge(V u, V v);
 
@@ -82,6 +83,7 @@ public abstract class DirectedGraph<V, E> {
      * @param v the destination vertex
      * @return the edge with the given source and destination labels
      * @throws NoSuchEdgeException if the specified edge does not exist
+     * @throws NoSuchVertexException if the specified source or destination does not exist
      */
     public abstract Edge<V, E> getEdge(V u, V v);
 
@@ -93,6 +95,7 @@ public abstract class DirectedGraph<V, E> {
      * @param v the destination vertex
      * @return the label of the edge with the given source and destination labels
      * @throws NoSuchEdgeException if the specified edge does not exist
+     * @throws NoSuchVertexException if the specified source or destination does not exist
      */
     public abstract E removeEdge(V u, V v);
 
