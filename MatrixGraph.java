@@ -9,8 +9,8 @@ import java.util.Objects;
  * @author ckurdelak20@gorgefox.edu
  */
 public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
-    private Vertex<V>[] _vertices;
-    private Edge<V, E>[][] _edges; // 2D array
+    private Object[] _vertices;
+    private Object[][] _edges; // 2D array
     private int _size; // the actual number of vertices in the graph
     private int _edgeCount;
 
@@ -34,8 +34,10 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     @SuppressWarnings({"unchecked"})
     public MatrixGraph(int initialCapacity) {
         // TODO fix ClassCastException in ctors
-        _vertices = (Vertex<V>[]) new Object[initialCapacity];
-        _edges = (Edge<V, E>[][]) new Object[initialCapacity][initialCapacity];
+        //(Vertex<V>[])
+        _vertices = new Object[initialCapacity];
+        _edges = new Object[initialCapacity][initialCapacity];
+        // (Edge<V, E>[][])
         _size = 0;
         _edgeCount = 0;
     }
@@ -49,7 +51,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public void add(V v) {
-        if (this.contains(v)) {
+        if (!this.contains(v)) {
             // linear search for first null position
             int index = indexOf(null);
             // if there isn't any, grow
@@ -92,7 +94,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     @Override
     public Vertex<V> get(V v) {
         if (this.contains(v)) {
-            return _vertices[indexOf(v)];
+            return (Vertex<V>) _vertices[indexOf(v)];
         }
         else {
             throw new NoSuchVertexException();
@@ -202,7 +204,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
                 int srcIndex = indexOf(u);
                 int destIndex = indexOf(v);
 
-                return _edges[srcIndex][destIndex];
+                return (Edge<V, E>) _edges[srcIndex][destIndex];
             } else {
                 throw new NoSuchEdgeException();
             }
@@ -229,7 +231,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
                 int srcIndex = this.indexOf(u);
                 int destIndex = this.indexOf(v);
 
-                Edge<V, E> oldEdge = _edges[srcIndex][destIndex];
+                Edge<V, E> oldEdge = (Edge<V, E>) _edges[srcIndex][destIndex];
                 _edges[srcIndex][destIndex] = null;
 
                 _edgeCount--;
@@ -251,7 +253,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      * @return the size of this graph
      */
     public int size() {
-        return _size; // TODO fix size
+        return _size;
     }
 
 
@@ -288,7 +290,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      * @return the number of edges in this graph
      */
     public int edgeCount() {
-        return _edgeCount; // TODO fix edgeCount
+        return _edgeCount;
     }
 
 
@@ -300,9 +302,9 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     @Override
     public Iterator<Vertex<V>> vertices() {
         ArrayList<Vertex<V>> vertices = new ArrayList<Vertex<V>>();
-        for (Vertex<V> vertex : _vertices) {
+        for (Object vertex : _vertices) {
             if (vertex != null) {
-                vertices.add(vertex);
+                vertices.add((Vertex<V>) vertex);
             }
         }
 
@@ -326,8 +328,11 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
             ArrayList<Vertex<V>> adjacentVertices = new ArrayList<Vertex<V>>();
 
             for (int i = 0; i < _edges.length; i++) {
-                if (_edges[index][i].equals(u)) {
-                    adjacentVertices.add(this.get(_edges[index][i].getV()));
+                Edge<V, E> edge = (Edge<V, E>) _edges[index][i];
+                if (edge.equals(u)) {
+                    V vertexLabel = (V) _edges[index][i];
+                    Vertex<V> vertex = (Vertex<V>) this.get(vertexLabel);
+                    adjacentVertices.add((Vertex<V>) this.get(edge.getV()));
                 }
             }
 
@@ -347,10 +352,10 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     @Override
     public Iterator<Edge<V, E>> edges() {
         ArrayList<Edge<V, E>> edges = new ArrayList<Edge<V, E>>();
-        for (Edge<V, E>[] edge : _edges) {
+        for (Object[] edge : _edges) {
             for (int j = 0; j < _edges.length; j++) {
                 if (edge[j] != null) {
-                    edges.add(edge[j]);
+                    edges.add((Edge<V, E>) edge[j]);
                 }
             }
         }
@@ -394,10 +399,9 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     /**
      * Grows the backing array of vertices by increasing its capacity by 10.
      */
-    @SuppressWarnings({"unchecked"})
     private void growArray() {
         if (_vertices.length < Integer.MAX_VALUE) {
-            Vertex<V>[] newArray = (Vertex<V>[]) new Object[_size + GROWTH_FACTOR];
+            Object[] newArray = new Object[_size + GROWTH_FACTOR];
             for (int i = 0; i < _vertices.length; i++) {
                 newArray[i] = _vertices[i];
             }
@@ -415,8 +419,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     @SuppressWarnings({"unchecked"})
     private void growMatrix() {
         if (_edges.length < Integer.MAX_VALUE) {
-            Edge<V, E>[][] newMatrix =
-                    (Edge<V, E>[][]) new Object[_size + GROWTH_FACTOR][_size + GROWTH_FACTOR];
+            Object[][] newMatrix = new Object[_size + GROWTH_FACTOR][_size + GROWTH_FACTOR];
             // for each row
             for (int i = 0; i < _edges.length; i++) {
                 // for each column

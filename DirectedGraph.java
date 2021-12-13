@@ -164,6 +164,6 @@ public abstract class DirectedGraph<V, E> {
      */
     public boolean isEmpty() {
         return this.size() == 0;
-    } // TODO fix isEmpty
+    }
 }
 

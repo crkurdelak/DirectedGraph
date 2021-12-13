@@ -94,6 +94,12 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
                 map.remove(v);
                 _edgeCount --;
             }
+            // TODO remove all edges with v as dest
+            for (HashMap<V, Edge<V, E>> map : maps) {
+                if (map.containsValue(v)) {
+
+                }
+            }
 
             _size --;
             return oldVertex.getLabel();
@@ -216,7 +222,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      * @return the size of this graph
      */
     public int size() {
-        return _size; // TODO fix size
+        return _size;
     }
 
 
@@ -229,13 +235,13 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public int degree(V v) {
-        // TODO fix degree
         if (this.contains(v)) {
             Collection<Vertex<V>> vertices = _vertices.values();
             int count = 0;
             for (Vertex<V> vertex : vertices) {
-                if (_edges.containsKey(vertex.getLabel())) {
-                    count += _edges.get(vertex.getLabel()).size();
+                V srcVertexLabel = vertex.getLabel();
+                if (_edges.containsKey(srcVertexLabel)) {
+                    count += _edges.get(srcVertexLabel).size(); // TODO fix this part
                 }
             }
 
@@ -253,7 +259,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      * @return the number of edges in this graph
      */
     public int edgeCount() {
-        return _edgeCount; // TODO fix edgeCount
+        return _edgeCount;
     }
 
 
@@ -323,5 +329,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
     public void clear() {
         _vertices.clear();
         _edges.clear();
+        _size = 0;
+        _edgeCount = 0;
     }
 }
