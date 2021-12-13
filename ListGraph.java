@@ -9,14 +9,14 @@ import java.util.Iterator;
  * @author ckurdelak20@gorgefox.edu
  */
 public class ListGraph<V, E> extends DirectedGraph<V, E> {
-    // TODO implement class
     private HashMap<V, Vertex<V>> _vertices;
     // vertex label -> Vertex object
 
     private HashMap<V, HashMap<V, Edge<V, E>>> _edges;
     // outer HashMap: source vertex label -> inner map
     //      inner HashMap: destination vertex label -> Edge from source to destination
-
+    private int _size;
+    private int _edgeCount;
 
     /**
      * Creates a new list graph.
@@ -38,6 +38,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
         if (!this.contains(v)) {
             Vertex<V> newVertex = new Vertex<V>(v);
             _vertices.put(v, newVertex);
+            _size ++;
         }
         else {
             throw new DuplicateVertexException();
@@ -66,7 +67,12 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public Vertex<V> get(V v) {
-        return _vertices.get(v);
+        if (this.contains(v)) {
+            return _vertices.get(v);
+        }
+        else {
+            throw new NoSuchVertexException();
+        }
     }
 
 
@@ -86,8 +92,10 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
             Collection<HashMap<V, Edge<V, E>>> maps = _edges.values();
             for (HashMap<V, Edge<V, E>> map : maps) {
                 map.remove(v);
+                _edgeCount --;
             }
 
+            _size --;
             return oldVertex.getLabel();
         }
         else {
@@ -116,6 +124,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
                 }
 
                 _edges.get(u).put(v, newEdge);
+                _edgeCount ++;
             }
             else {
                 throw new DuplicateEdgeException();
@@ -188,6 +197,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
             if (this.containsEdge(u, v)) {
                 Edge<V, E> oldEdge = _edges.get(u).remove(v);
 
+                _edgeCount --;
                 return oldEdge.getLabel();
             }
             else {
@@ -201,6 +211,16 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
 
 
     /**
+     * Returns the size of this graph.
+     *
+     * @return the size of this graph
+     */
+    public int size() {
+        return _size; // TODO fix size
+    }
+
+
+    /**
      * Returns the degree of this vertex.
      *
      * @param v the label of this vertex
@@ -209,6 +229,7 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public int degree(V v) {
+        // TODO fix degree
         if (this.contains(v)) {
             Collection<Vertex<V>> vertices = _vertices.values();
             int count = 0;
@@ -223,6 +244,16 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
         else {
             throw new NoSuchVertexException();
         }
+    }
+
+
+    /**
+     * Returns the number of edges in this graph.
+     *
+     * @return the number of edges in this graph
+     */
+    public int edgeCount() {
+        return _edgeCount; // TODO fix edgeCount
     }
 
 
@@ -252,12 +283,10 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
         if (this.contains(u)) {
             Collection<Vertex<V>> vertices = _vertices.values();
             Collection<Vertex<V>> adjacentVertices = new ArrayList<Vertex<V>>();
-            for (Vertex<V> vertex : vertices) {
-                if (_edges.containsKey(u)) {
-                    Collection<Edge<V, E>> edges = _edges.get(u).values();
-                    for (Edge<V, E> edge : edges) {
-                        adjacentVertices.add(this.get(edge.getV()));
-                    }
+            if (_edges.containsKey(u)) {
+                Collection<Edge<V, E>> edges = _edges.get(u).values();
+                for (Edge<V, E> edge : edges) {
+                    adjacentVertices.add(this.get(edge.getV()));
                 }
             }
 

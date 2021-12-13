@@ -33,6 +33,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @SuppressWarnings({"unchecked"})
     public MatrixGraph(int initialCapacity) {
+        // TODO fix ClassCastException in ctors
         _vertices = (Vertex<V>[]) new Object[initialCapacity];
         _edges = (Edge<V, E>[][]) new Object[initialCapacity][initialCapacity];
         _size = 0;
@@ -114,9 +115,11 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
 
             for (int i = 0; i < _edges.length; i++) {
                 _edges[0][i] = null;
+                _edgeCount --;
             }
             for (int i = 0; i < _edges.length; i++) {
                 _edges[i][0] = null;
+                _edgeCount --;
             }
 
             _size--;
@@ -243,6 +246,16 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
 
 
     /**
+     * Returns the size of this graph.
+     *
+     * @return the size of this graph
+     */
+    public int size() {
+        return _size; // TODO fix size
+    }
+
+
+    /**
      * Returns the degree of this vertex.
      *
      * @param v the label of this vertex
@@ -266,6 +279,16 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
         else {
             throw new NoSuchVertexException();
         }
+    }
+
+
+    /**
+     * Returns the number of edges in this graph.
+     *
+     * @return the number of edges in this graph
+     */
+    public int edgeCount() {
+        return _edgeCount; // TODO fix edgeCount
     }
 
 

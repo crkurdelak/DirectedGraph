@@ -9,9 +9,6 @@ import java.util.Iterator;
  * @author ckurdelak20@gorgefox.edu
  */
 public abstract class DirectedGraph<V, E> {
-    private int _size;
-    private int _currentIndex;
-    private int _edgeCount;
 
     /**
      * Adds a new vertex to this graph.
@@ -105,9 +102,7 @@ public abstract class DirectedGraph<V, E> {
      *
      * @return the size of this graph
      */
-    public int size() {
-        return _size;
-    }
+    public abstract int size();
 
 
     /**
@@ -125,9 +120,7 @@ public abstract class DirectedGraph<V, E> {
      *
      * @return the number of edges in this graph
      */
-    public int edgeCount() {
-        return _edgeCount;
-    }
+    public abstract int edgeCount();
 
 
     /**
@@ -171,6 +164,6 @@ public abstract class DirectedGraph<V, E> {
      */
     public boolean isEmpty() {
         return this.size() == 0;
-    }
+    } // TODO fix isEmpty
 }
 
