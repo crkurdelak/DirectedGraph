@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -82,9 +83,9 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
             Vertex<V> oldVertex = _vertices.remove(v);
             _edges.remove(v);
 
-            Collection<HashMap<V, Edge<V, E>>> values = _edges.values();
-            for (HashMap<V, Edge<V, E>> value : values) {
-                value.remove(v);
+            Collection<HashMap<V, Edge<V, E>>> maps = _edges.values();
+            for (HashMap<V, Edge<V, E>> map : maps) {
+                map.remove(v);
             }
 
             return oldVertex.getLabel();
@@ -208,7 +209,20 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public int degree(V v) {
-        return 0;
+        if (this.contains(v)) {
+            Collection<Vertex<V>> vertices = _vertices.values();
+            int count = 0;
+            for (Vertex<V> vertex : vertices) {
+                if (_edges.containsKey(vertex.getLabel())) {
+                    count += _edges.get(vertex.getLabel()).size();
+                }
+            }
+
+            return count;
+        }
+        else {
+            throw new NoSuchVertexException();
+        }
     }
 
 
@@ -219,7 +233,8 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public Iterator<Vertex<V>> vertices() {
-        return null;
+        Collection<Vertex<V>> vertices = _vertices.values();
+        return vertices.iterator();
     }
 
 
@@ -234,7 +249,23 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public Iterator<Vertex<V>> adjacent(V u) {
-        return null;
+        if (this.contains(u)) {
+            Collection<Vertex<V>> vertices = _vertices.values();
+            Collection<Vertex<V>> adjacentVertices = new ArrayList<Vertex<V>>();
+            for (Vertex<V> vertex : vertices) {
+                if (_edges.containsKey(u)) {
+                    Collection<Edge<V, E>> edges = _edges.get(u).values();
+                    for (Edge<V, E> edge : edges) {
+                        adjacentVertices.add(this.get(edge.getV()));
+                    }
+                }
+            }
+
+            return adjacentVertices.iterator();
+        }
+        else {
+            throw new NoSuchVertexException();
+        }
     }
 
 
@@ -245,7 +276,14 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public Iterator<Edge<V, E>> edges() {
-        return null;
+        Collection<HashMap<V, Edge<V, E>>> maps = _edges.values();
+        Collection<Edge<V, E>> edges = new ArrayList<Edge<V, E>>();
+        for (HashMap<V, Edge<V, E>> map : maps) {
+            Collection<Edge<V, E>> values = map.values();
+            edges.addAll(values);
+        }
+
+        return edges.iterator();
     }
 
 
