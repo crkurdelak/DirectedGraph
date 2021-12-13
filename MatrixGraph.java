@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 
@@ -39,32 +40,6 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     }
 
 
-    // linear search rows to find source
-    // linear search columns to find destination
-
-    // remove vertex A:
-    // null out vertex
-    // null out all edges where A was source
-    // null out every edge where A was destination
-
-    // to remove a vertex: O(3|v| + 1) = O(|v|)
-    // |v| =  "number of vertices"
-    // |E| = "number of edges"
-    // O(|v|) linear search of _vertices to determine index
-    // O(1) remove vertex from _vertices
-    // O(|v|) for-loop to remove edges from _edges where vertex is source
-    // O(|v|) for-loop to remove edges from _edges where vertex is destination
-
-    // add node:
-    // linear search for first null position
-    // if there isn't any, grow
-
-    // growth strategy:
-    // *2 growth
-    // O(|v|^2) copy n*n items to new array, to save space
-    // OR
-    // grow by + 1, + k
-
     /**
      * Adds a new vertex to this graph.
      *
@@ -74,7 +49,6 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     @Override
     public void add(V v) {
         if (this.contains(v)) {
-            // add node:
             // linear search for first null position
             int index = indexOf(null);
             // if there isn't any, grow
@@ -303,9 +277,9 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     @Override
     public Iterator<Vertex<V>> vertices() {
         ArrayList<Vertex<V>> vertices = new ArrayList<Vertex<V>>();
-        for (int i = 0; i < _vertices.length; i++) {
-            if (_vertices[i] != null) {
-                vertices.add(_vertices[i]);
+        for (Vertex<V> vertex : _vertices) {
+            if (vertex != null) {
+                vertices.add(vertex);
             }
         }
 
@@ -350,10 +324,10 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     @Override
     public Iterator<Edge<V, E>> edges() {
         ArrayList<Edge<V, E>> edges = new ArrayList<Edge<V, E>>();
-        for (int i = 0; i < _edges.length; i++) {
+        for (Edge<V, E>[] edge : _edges) {
             for (int j = 0; j < _edges.length; j++) {
-                if (_edges[i][j] != null) {
-                    edges.add(_edges[i][j]);
+                if (edge[j] != null) {
+                    edges.add(edge[j]);
                 }
             }
         }
@@ -367,15 +341,8 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @Override
     public void clear() {
-        for (int i = 0; i < _vertices.length; i++) {
-            _vertices[i] = null;
-        }
-        for (int i = 0; i < _edges.length; i++) {
-            _edges[0][i] = null;
-        }
-        for (int i = 0; i < _edges.length; i++) {
-            _edges[i][0] = null;
-        }
+        Arrays.fill(_vertices, null);
+        Arrays.fill(_edges, null);
     }
 
 
