@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * A directed graph backed by a hashmap
@@ -87,7 +84,15 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
     public V remove(V v) {
         if (this.contains(v)) {
             Vertex<V> oldVertex = _vertices.remove(v);
-            _edgeCount -= _edges.remove(v).size(); // TODO update _edgeCount
+            HashMap<V, Edge<V, E>> removed = _edges.remove(v);
+            int numRemoved;
+            if (!Objects.equals(removed, null)) {
+                numRemoved = removed.size();
+            }
+            else {
+                numRemoved = 0;
+            }
+            _edgeCount -= numRemoved;
 
             for (V key : _edges.keySet()) {
                 HashMap<V, Edge<V, E>> inner = _edges.get(key);
