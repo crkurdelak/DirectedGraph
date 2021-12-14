@@ -116,12 +116,16 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
             _vertices[this.indexOf(v)] = null;
 
             for (int i = 0; i < _edges.length; i++) {
-                _edges[0][i] = null;
-                _edgeCount --;
+                if (!Objects.equals(_edges[0][i], null)) {
+                    _edges[0][i] = null;
+                    _edgeCount--;
+                }
             }
             for (int i = 0; i < _edges.length; i++) {
-                _edges[i][0] = null;
-                _edgeCount --;
+                if (!Objects.equals(_edges[i][0], null)) {
+                    _edges[i][0] = null;
+                    _edgeCount--;
+                }
             }
 
             _size--;
