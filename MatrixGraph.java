@@ -276,7 +276,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
             int count = 0;
 
             for (int i = 0; i < _edges.length; i++) {
-                if (Objects.equals(_edges[index][i], equals(v))) {
+                if (!Objects.equals(_edges[index][i], null)) {
                     count++;
                 }
             }
