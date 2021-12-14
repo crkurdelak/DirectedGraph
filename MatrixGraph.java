@@ -33,7 +33,6 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
      */
     @SuppressWarnings({"unchecked"})
     public MatrixGraph(int initialCapacity) {
-        // TODO fix ClassCastException in ctors
         //(Vertex<V>[])
         _vertices = new Object[initialCapacity];
         _edges = new Object[initialCapacity][initialCapacity];
