@@ -87,18 +87,12 @@ public class ListGraph<V, E> extends DirectedGraph<V, E> {
     public V remove(V v) {
         if (this.contains(v)) {
             Vertex<V> oldVertex = _vertices.remove(v);
-            _edges.remove(v);
+            _edgeCount -= _edges.remove(v).size(); // TODO update _edgeCount
 
-            Collection<HashMap<V, Edge<V, E>>> maps = _edges.values();
-            for (HashMap<V, Edge<V, E>> map : maps) {
-                map.remove(v);
+            for (V key : _edges.keySet()) {
+                HashMap<V, Edge<V, E>> inner = _edges.get(key);
+                inner.remove(v);
                 _edgeCount --;
-            }
-            // TODO remove all edges with v as dest
-            for (HashMap<V, Edge<V, E>> map : maps) {
-                if (map.containsValue(v)) {
-
-                }
             }
 
             _size --;

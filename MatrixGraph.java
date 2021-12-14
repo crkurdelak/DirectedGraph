@@ -180,7 +180,8 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
             int srcIndex = this.indexOf(u);
             int destIndex = this.indexOf(v);
 
-            return srcIndex != NOT_FOUND && destIndex != NOT_FOUND;
+            // check _edges matrix at those indices
+            return !Objects.equals(_edges[srcIndex][destIndex], null);
         }
         else {
             throw new NoSuchVertexException();
@@ -271,7 +272,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
             int count = 0;
 
             for (int i = 0; i < _edges.length; i++) {
-                if (_edges[index][i].equals(v)) {
+                if (Objects.equals(_edges[index][i], equals(v))) {
                     count++;
                 }
             }
@@ -386,9 +387,18 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
         boolean isFound = false;
         int i = 0;
         while (!isFound && i < _vertices.length) {
-            if (Objects.equals(label, _vertices[i])) {
-                index = i;
-                isFound = true;
+            if (!Objects.equals(_vertices[i], null)) {
+                Vertex<V> vertex = (Vertex<V>) _vertices[i];
+                if (vertex.getLabel().equals(label)) {
+                    index = i;
+                    isFound = true;
+                }
+            }
+            else {
+                if (Objects.equals(_vertices[i], label)) {
+                    index = i;
+                    isFound = true;
+                }
             }
             i++;
         }
