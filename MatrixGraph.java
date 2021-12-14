@@ -329,11 +329,13 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
             ArrayList<Vertex<V>> adjacentVertices = new ArrayList<Vertex<V>>();
 
             for (int i = 0; i < _edges.length; i++) {
-                Edge<V, E> edge = (Edge<V, E>) _edges[index][i];
-                if (edge.equals(u)) {
-                    V vertexLabel = (V) _edges[index][i];
-                    Vertex<V> vertex = (Vertex<V>) this.get(vertexLabel);
-                    adjacentVertices.add((Vertex<V>) this.get(edge.getV()));
+                if(!Objects.equals(_edges[index][i], null)) {
+                    Edge<V, E> edge = (Edge<V, E>) _edges[index][i];
+                    if (edge.getU().equals(u)) {
+                        V vertexLabel = edge.getV();
+                        Vertex<V> vertex = (Vertex<V>) this.get(vertexLabel);
+                        adjacentVertices.add((Vertex<V>) this.get(edge.getV()));
+                    }
                 }
             }
 
@@ -372,6 +374,8 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
     public void clear() {
         Arrays.fill(_vertices, null);
         Arrays.fill(_edges, null);
+        _size = 0;
+        _edgeCount = 0;
     }
 
 
