@@ -59,6 +59,7 @@ public class MatrixGraph<V, E> extends DirectedGraph<V, E> {
                 int oldLast = _vertices.length;
                 this.growArray();
                 index = oldLast + 1;
+                this.growMatrix();
             }
 
             Vertex<V> newVertex = new Vertex<V>(v);
